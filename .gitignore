@@ -163,3 +163,4 @@ cython_debug/
 # Extras
 static_root/
 media/
+migrations/

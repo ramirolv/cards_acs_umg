@@ -5,5 +5,5 @@ from .views import *
 app_name='cards'
 
 urlpatterns = [
-    path('', home_view, name='nueva'),
+    
 ]
