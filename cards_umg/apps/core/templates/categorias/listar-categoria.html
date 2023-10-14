@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% load static %}
 {% block titulo %}Categorias{%endblock titulo %}
+{% block estilos %}
+{% endblock estilos %}
 {% block contenido %}
 <!-- ======= Sección de Bienvenida ======= -->
 <section class="d-flex justify-content-center align-items-center mt-5">
@@ -15,34 +17,18 @@
       <div class="row" data-aos="zoom-in" data-aos-delay="100">
 
         {% for categoria in categorias %}
-        <!-- Card de categorias -->
-        <div class="col-lg-3 col-md-4">
-          <div class="icon-box">
-            <i class="ri-book-open-line" style="color: #ffbb2c"></i>
-            <h3><a href=""> {{categoria.nombre}} </a></h3>
+          <!-- Card de categorias -->
+          <div class="col-lg-3 col-md-4 card p-1 border border-0">
+            <div class="icon-box">
+              <div class="image-container w-25">
+                <img src="{{ categoria.icono.url }}" alt="{{ categoria.nombre }}" class="img-fluid" style="height: 2.5em;">
+              </div>
+              <h3><a href="#" class="stretched-link">{{ categoria.nombre }}</a></h3>
+            </div>
           </div>
-        </div>
-        <!-- Card de categorias -->
+          <!-- Card de categorias -->
         {% endfor %}
 
-        <div class="col-lg-3 col-md-4 mt-4 mt-md-0">
-          <div class="icon-box">
-            <i class="ri-group-line" style="color: #5578ff"></i>
-            <h3><a href="">Comunidad de Aprendizaje</a></h3>
-          </div>
-        </div>
-        <div class="col-lg-3 col-md-4 mt-4 mt-md-0">
-          <div class="icon-box">
-            <i class="ri-share-box-line" style="color: #e80368"></i>
-            <h3><a href="">Colaboración en Colecciones</a></h3>
-          </div>
-        </div>
-        <div class="col-lg-3 col-md-4 mt-4 mt-lg-0">
-          <div class="icon-box">
-            <i class="ri-user-heart-line" style="color: #e361ff"></i>
-            <h3><a href="">Aprendizaje Personalizado</a></h3>
-          </div>
-        </div>
       </div>
     </div>
   </section>
