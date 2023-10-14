@@ -1,7 +1,9 @@
 from django.contrib import admin
 from django.urls import path, include
+from .views import *
 
 app_name='cards'
 
 urlpatterns = [
+    path('', home_view, name='nueva'),
 ]
