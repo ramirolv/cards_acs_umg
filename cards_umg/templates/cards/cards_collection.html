@@ -1,0 +1,351 @@
+{% extends "base.html" %}
+
+<!--Carga archivo estáticos-->
+{% load static %}
+
+<!--Título de la página actual-->
+{% block title%}Categorias{%endblock title %}
+
+<!--Ploque de estilos personalizados -->
+{% block links_custom %}
+<style>
+  .cardBox.clicked .card {
+    transform: rotateY(180deg);
+  }
+
+  .card {
+    background: #222;
+    cursor: default;
+    height: 300px;
+    transform-style: preserve-3d;
+    transition: transform 0.4s ease 0s;
+    width: 100%;
+    -webkit-animation: giro 1s 1;
+    animation: giro 1s 1;
+  }
+
+  .card p {
+    margin-bottom: 1.8em;
+  }
+
+  .card .front,
+  .card .back {
+    backface-visibility: hidden;
+    box-sizing: border-box;
+    color: white;
+    display: block;
+    font-size: 1.2em;
+    height: 100%;
+    padding: 0.8em;
+    position: absolute;
+    text-align: center;
+    width: 100%;
+  }
+
+  .card .front strong {
+    background: #fff;
+    border-radius: 100%;
+    color: #222;
+    font-size: 1.5em;
+    line-height: 30px;
+    padding: 0 7px 4px 6px;
+  }
+
+  .card .back {
+    transform: rotateY(180deg);
+  }
+
+  .card .back a {
+    padding: 0.3em 0.5em;
+    background: #333;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 1px;
+    font-size: 0.9em;
+    transition: all 0.2s ease 0s;
+  }
+
+  .card .back a:hover {
+    background: #fff;
+    color: #333;
+    text-shadow: 0 0 1px #333;
+  }
+
+  .cardBox:nth-child(1) .card .back {
+    background: cornflowerblue;
+  }
+
+  .cardBox:nth-child(2) .card .back {
+    background: orange;
+  }
+
+  .cardBox:nth-child(3) .card .back {
+    background: yellowgreen;
+  }
+
+  .cardBox:nth-child(4) .card .back {
+    background: tomato;
+  }
+
+  .cardBox:nth-child(2) .card {
+    -webkit-animation: giro 1.5s 1;
+    animation: giro 1.5s 1;
+  }
+
+  .cardBox:nth-child(3) .card {
+    -webkit-animation: giro 2s 1;
+    animation: giro 2s 1;
+  }
+
+  .cardBox:nth-child(4) .card {
+    -webkit-animation: giro 2.5s 1;
+    animation: giro 2.5s 1;
+  }
+
+  @-webkit-keyframes giro {
+    from {
+      transform: rotateY(180deg);
+    }
+    to {
+      transform: rotateY(0deg);
+    }
+  }
+
+  @keyframes giro {
+    from {
+      transform: rotateY(180deg);
+    }
+    to {
+      transform: rotateY(0deg);
+    }
+  }
+
+  @media screen and (max-width: 767px) {
+    .cardBox {
+      margin-left: 2.8%;
+      margin-top: 3%;
+      width: 46%;
+    }
+    .card {
+      height: 285px;
+    }
+    .cardBox:last-child {
+      margin-bottom: 3%;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    .cardBox {
+      width: 94.5%;
+    }
+    .card {
+      height: 260px;
+    }
+  }
+</style>
+{% endblock links_custom %}
+
+<!--Bloque del contenido principal-->
+{% block contenido %}
+<!-- ======= Sección de Bienvenida ======= -->
+<section class="d-flex justify-content-center align-items-center mt-5">
+  <h1>Cards de {{collection.nombre}}</h1>
+</section>
+<!-- Fin de la Sección de Bienvenida -->
+<!-- ======= Sección de Características ======= -->
+<section id="features" class="features">
+  <div class="container-fluid" data-aos="fade-up">
+    <div class="container-fluid">
+      <!-- Button trigger modal -->
+      <button
+        type="button"
+        class="btn btn-outline-success"
+        data-bs-toggle="modal"
+        data-bs-target="#staticBackdrop"
+      >
+        <i class="bi bi-bookmark-plus-fill"></i> Agregar card
+      </button>
+
+      <!-- Modal -->
+      <div
+        class="modal fade"
+        id="staticBackdrop"
+        data-bs-backdrop="static"
+        data-bs-keyboard="false"
+        tabindex="-1"
+        aria-labelledby="staticBackdropLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="staticBackdropLabel">
+                Agrega nueva card a la colección {{collection.nombre}}
+              </h1>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <form
+                class="form row needs-validation"
+                method="post"
+                action="{% url 'cards:create-card' %}"
+                novalidate
+                enctype="multipart/form-data"
+              >
+                {% csrf_token %}
+                <input
+                  id="coleccion"
+                  name="coleccion_id"
+                  value="{{collection.id}}"
+                  hidden
+                  required
+                />
+                <div class="form-group mb-3">
+                  <label for="enunciado">Enunciado</label>
+                  <textarea
+                    class="form-control"
+                    id="enunciado"
+                    name="enunciado"
+                    required
+                  ></textarea>
+                  <span class="invalid-feedback">
+                    Este campo es requerido.
+                  </span>
+                </div>
+                <div class="form-group mb-3">
+                  <label for="respuesta">Respuesta</label>
+                  <textarea
+                    class="form-control"
+                    id="respuesta"
+                    name="respuesta"
+                    required
+                  ></textarea>
+                  <span class="invalid-feedback">
+                    Este campo es requerido.
+                  </span>
+                </div>
+                <div class="container">
+                  <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-floppy-fill"></i> Guardar
+                  </button>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Cerrar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="row mt-3 justify-content-center"
+      data-aos="zoom-in"
+      data-aos-delay="100"
+    >
+      <div class="col-8">
+        <div id="myCarousel" class="carousel slide" data-ride="carousel">
+          <div class="carousel-inner">
+            
+            {% for card in cards %}
+            <div class="carousel-item {% if forloop.counter == 1 %}active{% endif %}">
+              <div class="cardBox">
+                <div class="card">
+                  <div class="front">
+                    <h3> {{card.enunciado}} </h3>
+                    <p>Prueba</p>
+                    <strong>&#x21bb;</strong>
+                  </div>
+                  <div class="back">
+                    <h3>{{card.respuesta}}</h3>
+                    <p>Content in card one</p>
+                    <a href="#">Button 1</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+            <!-- Agrega más elementos de carrusel según sea necesario -->
+          </div>
+
+          <a
+            class="carousel-control-prev"
+            href="#myCarousel"
+            role="button"
+            data-slide="prev"
+            onclick="prevItem()"
+          >
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </a>
+
+          <a
+            class="carousel-control-next"
+            href="#myCarousel"
+            role="button"
+            data-slide="next"
+            onclick="nextItem()"
+          >
+            <span class="carousel-control-next-icon" ariahidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </a>
+        </div>
+      </div>
+      <div class="col-4">
+        sidebar
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Fin de la Sección de Características -->
+{% endblock contenido %}
+
+<!-- Bloque de los scripts custom -->
+{% block custom_scripts %}
+<script src="{% static 'bootstrap/js/formValidation.js' %}"></script>
+
+<script>
+  const container = $("#myCarousel");
+  const items = container.find(".carousel-item");
+  const totalItems = items.length;
+  let currentItem = 0;
+  
+  function goToItem(index) {
+    console.log("Cambiando item: "+index);
+    if (index < 0) index = totalItems - 1;
+    if (index >= totalItems) index = 0;
+    currentItem = index;
+
+    items.removeClass("active");
+    items.eq(currentItem).addClass("active");
+  }
+
+  function nextItem() {
+    console.log("Presionando siguiente");
+    goToItem(currentItem + 1);
+  }
+
+  function prevItem() {
+    console.log("Presionando previa");
+    goToItem(currentItem - 1);
+  }
+
+  $(document).ready(function () {
+    //Código para voltear la card
+    $(".cardBox").click(function () {
+      $(this).toggleClass("clicked");
+    });
+  });
+</script>
+{% endblock custom_scripts %}

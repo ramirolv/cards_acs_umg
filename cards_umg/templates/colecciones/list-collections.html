@@ -128,7 +128,7 @@
         <div class="card-body">
             <h5 class="card-title">{{ collection.nombre }}</h5>
             <p class="card-text">{{ collection.descripcion }}</p>
-            <a href="#" class="stretched-link"></a>
+            <a href="{% url 'cards:list-cards-in-collection' collection.id %}" class="stretched-link"></a>
         </div>
     </div>
     
