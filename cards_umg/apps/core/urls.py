@@ -9,6 +9,9 @@ app_name='core'
 urlpatterns = [
     path('', home_view, name='home'),
     path('categorias/', categorias_view, name='categorias'),
+    path('categorias/create/', create_categoria, name='create-categoria'),
+    path('categorias/update/<int:pk>/', update_categoria, name='update-categoria'),
+    path('categorias/delete/<int:pk>/', delete_categoria, name='delete-categoria'),
 ]
 
 if settings.DEBUG:

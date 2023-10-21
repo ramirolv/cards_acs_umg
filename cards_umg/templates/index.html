@@ -1,0 +1,201 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es" class="h-100" data-bs-theme="dark">
+  <head>
+    <script src="/docs/5.3/assets/js/color-modes.js"></script>
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="" />
+    <meta
+      name="author"
+      content="Ramiro López, Gabriela Fuentes, Cory Ramírez"
+    />
+    <meta name="generator" content="Hugo 0.118.2" />
+    <title>Inicio</title>
+
+    <link
+      rel="stylesheet"
+      href="{% static 'bootstrap/css/bootstrap.min.css' %}"
+    />
+    <link
+      rel="stylesheet"
+      href="{% static 'bootstrap/bootstrap-icons-1.11.1/bootstrap-icons.min.css' %}"
+    />
+
+    <meta name="theme-color" content="#712cf9" />
+
+    <!-- Estilos personalizados para esta plantilla -->
+    <link href="{% static 'bootstrap/css/cover.css' %}" rel="stylesheet" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        background: #222222;
+        overflow: hidden;
+      }
+
+      .square {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(#303030, #757575);
+        z-index: -1;
+      }
+
+      .circle {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 50px;
+        height: 50px;
+        background: #1cd99d;
+        border-radius: 50%;
+        z-index: -2;
+      }
+
+      .triangle {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 50px;
+        height: 50px;
+        background: #f5f5f5;
+        clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+        -webkit-clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+      }
+      /* Estilos predeterminados: oculta la imagen logo-sm por defecto */
+      .logo-sm {
+        display: none;
+      }
+
+      /* Estilos para resoluciones anchas o pantallas grandes */
+      @media (min-width: 768px) {
+        .logo-lg {
+          display: block; /* Muestra la imagen con la clase logo-lg */
+        }
+        .logo-sm {
+          display: none; /* Oculta la imagen con la clase logo-sm */
+        }
+      }
+
+      /* Estilos para resoluciones pequeñas o pantallas pequeñas */
+      @media (max-width: 767px) {
+        .logo-lg {
+          display: none; /* Oculta la imagen con la clase logo-lg */
+        }
+        .logo-sm {
+          display: block; /* Muestra la imagen con la clase logo-sm */
+        }
+      }
+    </style>
+  </head>
+  <body class="d-flex h-100 text-center text-bg-dark">
+    <div class="square"></div>
+    <div class="square"></div>
+    <div class="square"></div>
+    <div class="square"></div>
+    <div class="square"></div>
+
+    <div class="circle"></div>
+    <div class="circle"></div>
+    <div class="circle"></div>
+    <div class="circle"></div>
+    <div class="circle"></div>
+
+    <div class="triangle"></div>
+    <div class="triangle"></div>
+    <div class="triangle"></div>
+    <div class="triangle"></div>
+    <div class="triangle"></div>
+    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+      <header class="mb-auto">
+        <div>
+          <h3 class="float-md-start mb-0">Cards Educativas</h3>
+          <nav class="nav nav-masthead justify-content-center float-md-end">
+            <a
+              class="nav-link fw-bold py-1 px-0 active"
+              aria-current="page"
+              href="#"
+              >Inicio</a
+            >
+            <a
+              class="nav-link fw-bold py-1 px-0"
+              href="{% url 'core:categorias' %}"
+              >Categorías</a
+            >
+            <a class="nav-link fw-bold py-1 px-0" href="#">Nosotros</a>
+          </nav>
+        </div>
+      </header>
+
+      <main class="px-3">
+        <div class=" d-flex justify-content-center">
+          <img
+          class="img-fluid logo-lg text-center"
+          src="{% static 'img/logo.png' %}"
+          alt="Logo"
+        />
+        <img
+          class="img-fluid logo-sm w-50 text-center"
+          src="{% static 'img/logo.png' %}"
+          alt="Logo"
+        />
+        </div>
+        <h1>Bienvenido a nuestra plataforma de estudio</h1>
+        <p class="lead">
+          Aquí puedes explorar y crear colecciones de tarjetas educativas para
+          mejorar tu proceso de aprendizaje. ¡Aprovecha esta herramienta para
+          estudiar de manera efectiva y organizada!
+        </p>
+        <p class="lead">
+          <a
+            href="{% url 'core:categorias' %}"
+            class="btn btn-lg btn-light fw-bold border-white bg-white"
+            >Comienza a aprender</a
+          >
+        </p>
+      </main>
+
+      <footer class="mt-auto text-white-50">
+        <p>Universidad Mariano Gálvez</p>
+      </footer>
+    </div>
+    <script src="{% static '/jquery/jquery-3.7.1.min.js' %}"></script>
+    <script src="{% static '/bootstrap/js/popper.min.js' %}"></script>
+    <script src="{% static '/bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.1.0/anime.min.js"></script>
+    <script>
+      function randomValues() {
+        anime({
+          targets: ".square, .circle, .triangle",
+          translateX: function () {
+            return anime.random(-500, 500);
+          },
+          translateY: function () {
+            return anime.random(-300, 300);
+          },
+          rotate: function () {
+            return anime.random(0, 360);
+          },
+          scale: function () {
+            return anime.random(0.2, 2);
+          },
+          duration: 1000,
+          easing: "easeInOutQuad",
+          complete: randomValues,
+        });
+      }
+
+      randomValues();
+    </script>
+  </body>
+</html>

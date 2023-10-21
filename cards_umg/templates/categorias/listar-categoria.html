@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% load static %}
+{% block titulo %}Categorias{%endblock titulo %}
+{% block estilos %}
+{% endblock estilos %}
+{% block contenido %}
+<!-- ======= Sección de Bienvenida ======= -->
+<section class="d-flex justify-content-center align-items-center mt-5">
+<h1>Descubre nuestras categorías</h1>
+</section>
+<!-- Fin de la Sección de Bienvenida -->
+
+<main id="main" class="">
+  <!-- ======= Sección de Características ======= -->
+  <section id="features" class="features">
+    <div class="container" data-aos="fade-up">
+      
+      <button type="button" class="btn btn-outline-primary" id="toggleButton">
+        Crear Categoría <i class='bx bxs-up-arrow'></i>
+      </button>
+      <div class="row" data-aos="zoom-in" data-aos-delay="100">
+        
+        {% for categoria in categorias %}
+<!-- Tarjeta de categorías con tarjeta estándar de Bootstrap -->
+<div class="col-lg-3 col-md-4">
+  <div class="card">
+    <div class="card-header">
+      <div class="dropdown">
+        <button class="btn btn-link" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i class='bx bx-dots-vertical-rounded'></i>
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item" href="#">Opción 1</a>
+          <a class="dropdown-item" href="#">Opción 2</a>
+        </div>
+      </div>
+    </div>
+    <img src="{{ categoria.icono.url }}" class="card-img-top" alt="{{ categoria.nombre }}">
+    <div class="card-body">
+      <h5 class="card-title">{{ categoria.nombre }}</h5>
+      <p class="card-text">Descripción de la categoría.</p>
+      <a href="#" class="btn btn-primary">Ver más</a>
+    </div>
+  </div>
+</div>
+<!-- Tarjeta de categorías con tarjeta estándar de Bootstrap -->
+
+
+        {% endfor %}
+
+      </div>
+    </div>
+  </section>
+  <!-- Fin de la Sección de Características -->
+</main>
+
+{% endblock contenido %}
+
+
+
+{% block custom_scripts %}
+<script>
+  $(document).ready(function() {
+    $("#icono").change(function() {
+      var input = this;
+      var preview = $("#iconoPreview")[0];
+
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          preview.src = e.target.result;
+        };
+        reader.readAsDataURL(input.files[0]);
+      } else {
+        preview.src = "";
+      }
+    });
+  });
+</script>
+{% endblock custom_scripts %}
+  
