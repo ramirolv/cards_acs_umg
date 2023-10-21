@@ -37,17 +37,22 @@ def create_collection(request):
         nombre = request.POST.get('nombre')
         descripcion = request.POST.get('descripcion')
         categoria_id = request.POST.get('categoria')
+        miniatura = request.FILES.get('miniatura')  # Obtén el archivo de miniatura
 
         try:
             categoria = Categoria.objects.get(pk=categoria_id)
             collection = Collection(
-                nombre=nombre, descripcion=descripcion, categoria=categoria)
+                nombre=nombre, descripcion=descripcion, categoria=categoria, miniatura=miniatura)
             collection.save()
+            messages.success(request, 'Colección creada exitosamente.')
             return redirect('cards:list-collections')
         except Categoria.DoesNotExist:
-            return HttpResponse('La categoría no existe', status=400)
+            messages.error(request, 'La categoría no existe')
+        except Exception as e:
+            messages.error(request, f'Error al crear la colección: {str(e)}')
 
-    return HttpResponseBadRequest('Método no permitido', status=405)
+    return redirect('cards:list-collections')
+
 
 
 def update_collection(request, pk):
