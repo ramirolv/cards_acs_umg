@@ -57,7 +57,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware', # Messages
 ]
+
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage' #Almacenamiento temporal en sessions
 
 ROOT_URLCONF = 'cards_umg.urls'
 

@@ -1,73 +1,110 @@
 {% extends "base.html" %}
+
+<!--Carga archivo estáticos-->
 {% load static %}
-{% block titulo %}Categorias{%endblock titulo %}
-{% block estilos %}
-{% endblock estilos %}
+
+<!--Título de la página actual-->
+{% block title%}Categorias{%endblock title %}
+
+<!--Ploque de estilos personalizados -->
+{% block links_custom %} {% endblock links_custom %}
+
+<!--Bloque del contenido principal-->
 {% block contenido %}
 <!-- ======= Sección de Bienvenida ======= -->
 <section class="d-flex justify-content-center align-items-center mt-5">
-<h1>Descubre nuestras categorías</h1>
+  <h1>Descubre nuestras categorías</h1>
 </section>
 <!-- Fin de la Sección de Bienvenida -->
+<!-- ======= Sección de Características ======= -->
+<section id="features" class="features">
+  <div class="container-fluid" data-aos="fade-up">
+    <div class="container">
+      <!-- Button trigger modal -->
+<button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+  <i class="bi bi-bookmark-plus-fill"></i> Nueva categoría 
+</button>
 
-<main id="main" class="">
-  <!-- ======= Sección de Características ======= -->
-  <section id="features" class="features">
-    <div class="container" data-aos="fade-up">
-      
-      <button type="button" class="btn btn-outline-primary" id="toggleButton">
-        Crear Categoría <i class='bx bxs-up-arrow'></i>
-      </button>
-      <div class="row" data-aos="zoom-in" data-aos-delay="100">
-        
-        {% for categoria in categorias %}
-<!-- Tarjeta de categorías con tarjeta estándar de Bootstrap -->
-<div class="col-lg-3 col-md-4">
-  <div class="card">
-    <div class="card-header">
-      <div class="dropdown">
-        <button class="btn btn-link" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <i class='bx bx-dots-vertical-rounded'></i>
-        </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <a class="dropdown-item" href="#">Opción 1</a>
-          <a class="dropdown-item" href="#">Opción 2</a>
-        </div>
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Agrega nueva Categoría</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-    </div>
-    <img src="{{ categoria.icono.url }}" class="card-img-top" alt="{{ categoria.nombre }}">
-    <div class="card-body">
-      <h5 class="card-title">{{ categoria.nombre }}</h5>
-      <p class="card-text">Descripción de la categoría.</p>
-      <a href="#" class="btn btn-primary">Ver más</a>
+      <div class="modal-body">
+        <!-- Formulario para crear categoría -->
+        <form class="form row needs-validation" method="post" action="{% url 'core:create-categoria' %}" enctype="multipart/form-data" novalidate>
+          {% csrf_token %}
+          <div class="form-group mb-3">
+            <label for="icono">Icono</label>
+            <input type="file" class="form-control" id="icono" name="icono" required>
+            <span class="invalid-feedback">
+              Este campo es requerido.
+            </span>
+          </div>
+          <div class="form-group mb-3">
+            <label for="nombre">Nombre de la Categoría</label>
+            <input type="text" class="form-control" id="nombre" name="nombre" required>
+            <span class="invalid-feedback">
+              Este campo es requerido.
+            </span>
+          </div>
+          <div class="container">
+            <button type="submit" class="btn btn-primary"><i class="bi bi-floppy-fill"></i> Guardar</button>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
     </div>
   </div>
 </div>
-<!-- Tarjeta de categorías con tarjeta estándar de Bootstrap -->
-
-
-        {% endfor %}
-
-      </div>
     </div>
-  </section>
-  <!-- Fin de la Sección de Características -->
-</main>
+    <div class="row gap-4 mt-3 justify-content-center" data-aos="zoom-in" data-aos-delay="100">
 
+      {% for categoria in categorias %}
+      <!-- Tarjeta de categorías con tarjeta estándar de Bootstrap -->
+      <div class="card p-0" style="max-width: 15rem">
+        <div class="row g-0">
+          <div class="col-md-4 p-3">
+            <img
+              src="{{ categoria.icono.url }}"
+              class="img-fluid"
+              alt="{{ categoria.nombre }}"
+            />
+          </div>
+          <div class="col-md-8 p-0 d-flex align-items-center">
+            <div class="card-body p-0">
+              <h6 class="card-title text-start text-truncate" style="max-width: 140px;">{{ categoria.nombre }}</h6>
+            </div>
+          </div>
+          <a class="stretched-link" href="{% url 'cards:list-collection-by-categorias' categoria.id %}"></a>
+        </div>
+      </div>
+      <!-- Tarjeta de categorías con tarjeta estándar de Bootstrap -->
+      {% endfor %}
+
+    </div>
+  </div>
+</section>
+<!-- Fin de la Sección de Características -->
 {% endblock contenido %}
 
-
-
+<!-- Bloque de los scripts custom -->
 {% block custom_scripts %}
+<script src="{% static 'bootstrap/js/formValidation.js' %}"></script>
 <script>
-  $(document).ready(function() {
-    $("#icono").change(function() {
+  $(document).ready(function () {
+    $("#icono").change(function () {
       var input = this;
       var preview = $("#iconoPreview")[0];
 
       if (input.files && input.files[0]) {
         var reader = new FileReader();
-        reader.onload = function(e) {
+        reader.onload = function (e) {
           preview.src = e.target.result;
         };
         reader.readAsDataURL(input.files[0]);
@@ -78,4 +115,3 @@
   });
 </script>
 {% endblock custom_scripts %}
-  
