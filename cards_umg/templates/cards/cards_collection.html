@@ -9,137 +9,64 @@
 <!--Ploque de estilos personalizados -->
 {% block links_custom %}
 <style>
-  .cardBox.clicked .card {
-    transform: rotateY(180deg);
-  }
-
-  .card {
-    background: #222;
-    cursor: default;
-    height: 300px;
-    transform-style: preserve-3d;
-    transition: transform 0.4s ease 0s;
-    width: 100%;
-    -webkit-animation: giro 1s 1;
-    animation: giro 1s 1;
-  }
-
-  .card p {
-    margin-bottom: 1.8em;
-  }
-
-  .card .front,
-  .card .back {
-    backface-visibility: hidden;
-    box-sizing: border-box;
-    color: white;
+  /* Aplica estilos a las tarjetas que no tienen la clase activeCard */
+  .activeCard {
+    animation: slide-left 1.4s;
     display: block;
-    font-size: 1.2em;
-    height: 100%;
-    padding: 0.8em;
-    position: absolute;
-    text-align: center;
-    width: 100%;
   }
 
-  .card .front strong {
-    background: #fff;
-    border-radius: 100%;
-    color: #222;
-    font-size: 1.5em;
-    line-height: 30px;
-    padding: 0 7px 4px 6px;
-  }
-
-  .card .back {
-    transform: rotateY(180deg);
-  }
-
-  .card .back a {
-    padding: 0.3em 0.5em;
-    background: #333;
-    color: #fff;
-    text-decoration: none;
-    border-radius: 1px;
-    font-size: 0.9em;
-    transition: all 0.2s ease 0s;
-  }
-
-  .card .back a:hover {
-    background: #fff;
-    color: #333;
-    text-shadow: 0 0 1px #333;
-  }
-
-  .cardBox:nth-child(1) .card .back {
-    background: cornflowerblue;
-  }
-
-  .cardBox:nth-child(2) .card .back {
-    background: orange;
-  }
-
-  .cardBox:nth-child(3) .card .back {
-    background: yellowgreen;
-  }
-
-  .cardBox:nth-child(4) .card .back {
-    background: tomato;
-  }
-
-  .cardBox:nth-child(2) .card {
-    -webkit-animation: giro 1.5s 1;
-    animation: giro 1.5s 1;
-  }
-
-  .cardBox:nth-child(3) .card {
-    -webkit-animation: giro 2s 1;
-    animation: giro 2s 1;
-  }
-
-  .cardBox:nth-child(4) .card {
-    -webkit-animation: giro 2.5s 1;
-    animation: giro 2.5s 1;
-  }
-
-  @-webkit-keyframes giro {
-    from {
-      transform: rotateY(180deg);
+  @keyframes slide-left {
+    0% {
+      transform: translateX(300px);
+      opacity: 0;
     }
-    to {
-      transform: rotateY(0deg);
+    100% {
+      transform: translateX(0);
+      opacity: 1;
+      display: block;
     }
   }
 
-  @keyframes giro {
-    from {
-      transform: rotateY(180deg);
+  .anteriorCard {
+    position: absolute; /* Cambia a absolute en lugar de relative */
+    left: 0;
+    top: 0;
+    opacity: 0;
+    animation: scale-down-center 1.4s linear both;
+    display: block; /* Asegura que el elemento esté visible antes de la animación */
+  }
+  @keyframes scale-down-center {
+    0% {
+      transform: scale(0.8);
+      opacity: 1;
     }
-    to {
-      transform: rotateY(0deg);
+    100% {
+      transform: scale(0.3);
+      opacity: 0;
+      display: none; /* Oculta el elemento al final de la animación */
     }
   }
 
-  @media screen and (max-width: 767px) {
-    .cardBox {
-      margin-left: 2.8%;
-      margin-top: 3%;
-      width: 46%;
-    }
-    .card {
-      height: 285px;
-    }
-    .cardBox:last-child {
-      margin-bottom: 3%;
-    }
+  /* Clase para ocultar el elemento con una transición hacia la derecha y display: "none" */
+  .siguienteCard {
+    position: absolute; /* Cambia a absolute en lugar de relative */
+    left: 0;
+    top: 0;
+    opacity: 0;
+    animation: slide-right 1.4s linear both;
+    display: block; /* Asegura que el elemento esté visible antes de la animación */
+    transform: scale(0.7);
   }
 
-  @media screen and (max-width: 480px) {
-    .cardBox {
-      width: 94.5%;
+  @keyframes slide-right {
+    0% {
+      transform: translateX(0) scale(0.7);
+      opacity: 1;
     }
-    .card {
-      height: 260px;
+    100% {
+      transform: translateX(300px) scale(0.7);
+      opacity: 0;
+      display: none; /* Oculta el elemento al final de la animación */
     }
   }
 </style>
@@ -155,155 +82,133 @@
 <!-- ======= Sección de Características ======= -->
 <section id="features" class="features">
   <div class="container-fluid" data-aos="fade-up">
-    <div class="container-fluid">
-      <!-- Button trigger modal -->
-      <button
-        type="button"
-        class="btn btn-outline-success"
-        data-bs-toggle="modal"
-        data-bs-target="#staticBackdrop"
-      >
-        <i class="bi bi-bookmark-plus-fill"></i> Agregar card
-      </button>
+    <div class="row mt-3 justify-content-center">
+      <div class="col-lg-7 col-sm-12 mb-3">
+        <div
+          id="contenedorCards"
+          class="container bg-dark position-relative rounded rounded-5 mb-3 p-5"
+          style="height: 400px; overflow: hidden"
+        >
+          {% for card in cards %}
+          <div class="card bg-primary p-5 text-white col-10 h-100 w-100 justify-content-center d-flex align-items-center {% if forloop.counter0 == 0 %}activeCard{% else %}siguienteCard{% endif %}" onclick="voltearCard()">
+            <!-- Botón Danger en la esquina superior derecha -->
+            <a href="{% url 'cards:delete-card' card.id %}" class="btn btn-danger position-absolute top-0 end-0 m-2 py-1 px-2"><i class="bi bi-trash"></i></a>
+        
+            <div class="enunciado active">
+                <p>Enunciado: </p>
+                <h3>{{card.enunciado}}</h3>
+            </div>
+            <div class="respuesta d-none">
+                <p>Respuesta: </p>
+                <h3>{{card.respuesta}}</h3>
+            </div>
+        </div>
+        
+          {% endfor %}
+        </div>
 
-      <!-- Modal -->
-      <div
-        class="modal fade"
-        id="staticBackdrop"
-        data-bs-backdrop="static"
-        data-bs-keyboard="false"
-        tabindex="-1"
-        aria-labelledby="staticBackdropLabel"
-        aria-hidden="true"
-      >
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h1 class="modal-title fs-5" id="staticBackdropLabel">
-                Agrega nueva card a la colección {{collection.nombre}}
-              </h1>
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div class="modal-body">
-              <form
-                class="form row needs-validation"
-                method="post"
-                action="{% url 'cards:create-card' %}"
-                novalidate
-                enctype="multipart/form-data"
-              >
-                {% csrf_token %}
-                <input
-                  id="coleccion"
-                  name="coleccion_id"
-                  value="{{collection.id}}"
-                  hidden
-                  required
-                />
-                <div class="form-group mb-3">
-                  <label for="enunciado">Enunciado</label>
-                  <textarea
-                    class="form-control"
-                    id="enunciado"
-                    name="enunciado"
-                    required
-                  ></textarea>
-                  <span class="invalid-feedback">
-                    Este campo es requerido.
-                  </span>
-                </div>
-                <div class="form-group mb-3">
-                  <label for="respuesta">Respuesta</label>
-                  <textarea
-                    class="form-control"
-                    id="respuesta"
-                    name="respuesta"
-                    required
-                  ></textarea>
-                  <span class="invalid-feedback">
-                    Este campo es requerido.
-                  </span>
-                </div>
-                <div class="container">
-                  <button type="submit" class="btn btn-primary">
-                    <i class="bi bi-floppy-fill"></i> Guardar
-                  </button>
-                </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                Cerrar
-              </button>
-            </div>
-          </div>
+        <div class="container d-flex justify-content-between">
+          <a class="btn btn-dark" href="#" onclick="regresarCard()">
+            <i class="bi bi-arrow-left"></i> Anterior
+          </a>
+          <a class="btn btn-dark" href="#" onclick="siguienteCard()">
+            Siguiente <i class="bi bi-arrow-right"></i>
+          </a>
         </div>
       </div>
-    </div>
-    <div
-      class="row mt-3 justify-content-center"
-      data-aos="zoom-in"
-      data-aos-delay="100"
-    >
-      <div class="col-8">
-        <div id="myCarousel" class="carousel slide" data-ride="carousel">
-          <div class="carousel-inner">
-            
-            {% for card in cards %}
-            <div class="carousel-item {% if forloop.counter == 1 %}active{% endif %}">
-              <div class="cardBox">
-                <div class="card">
-                  <div class="front">
-                    <h3> {{card.enunciado}} </h3>
-                    <p>Prueba</p>
-                    <strong>&#x21bb;</strong>
+      <div class="col-lg-4 col-sm-12 text-center">
+        <!-- Button trigger modal -->
+        <button
+          type="button"
+          class="btn btn-outline-success"
+          data-bs-toggle="modal"
+          data-bs-target="#staticBackdrop"
+        >
+          <i class="bi bi-bookmark-plus-fill"></i> Agregar card
+        </button>
+
+        <!-- Modal -->
+        <div
+          class="modal fade"
+          id="staticBackdrop"
+          data-bs-backdrop="static"
+          data-bs-keyboard="false"
+          tabindex="-1"
+          aria-labelledby="staticBackdropLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">
+                  Agrega nueva card a la colección {{collection.nombre}}
+                </h1>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <form
+                  class="form row needs-validation"
+                  method="post"
+                  action="{% url 'cards:create-card' %}"
+                  novalidate
+                  enctype="multipart/form-data"
+                >
+                  {% csrf_token %}
+                  <input
+                    id="coleccion"
+                    name="coleccion_id"
+                    value="{{collection.id}}"
+                    hidden
+                    required
+                  />
+                  <div class="form-group mb-3">
+                    <label for="enunciado">Enunciado</label>
+                    <textarea
+                      class="form-control"
+                      id="enunciado"
+                      name="enunciado"
+                      required
+                    ></textarea>
+                    <span class="invalid-feedback">
+                      Este campo es requerido.
+                    </span>
                   </div>
-                  <div class="back">
-                    <h3>{{card.respuesta}}</h3>
-                    <p>Content in card one</p>
-                    <a href="#">Button 1</a>
+                  <div class="form-group mb-3">
+                    <label for="respuesta">Respuesta</label>
+                    <textarea
+                      class="form-control"
+                      id="respuesta"
+                      name="respuesta"
+                      required
+                    ></textarea>
+                    <span class="invalid-feedback">
+                      Este campo es requerido.
+                    </span>
                   </div>
-                </div>
+                  <div class="container">
+                    <button type="submit" class="btn btn-primary">
+                      <i class="bi bi-floppy-fill"></i> Guardar
+                    </button>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Cerrar
+                </button>
               </div>
             </div>
-            {% endfor %}
-            <!-- Agrega más elementos de carrusel según sea necesario -->
           </div>
-
-          <a
-            class="carousel-control-prev"
-            href="#myCarousel"
-            role="button"
-            data-slide="prev"
-            onclick="prevItem()"
-          >
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-          </a>
-
-          <a
-            class="carousel-control-next"
-            href="#myCarousel"
-            role="button"
-            data-slide="next"
-            onclick="nextItem()"
-          >
-            <span class="carousel-control-next-icon" ariahidden="true"></span>
-            <span class="visually-hidden">Next</span>
-          </a>
         </div>
-      </div>
-      <div class="col-4">
-        sidebar
       </div>
     </div>
   </div>
@@ -313,39 +218,80 @@
 
 <!-- Bloque de los scripts custom -->
 {% block custom_scripts %}
-<script src="{% static 'bootstrap/js/formValidation.js' %}"></script>
+<script>
+  function regresarCard() {
+    console.log("Regresando");
+    const contenedorCards = document.getElementById("contenedorCards");
+    const cards = contenedorCards.querySelectorAll(".card");
+    const activeCard = contenedorCards.querySelector(".activeCard");
+
+    if (activeCard) {
+      const index = Array.from(cards).indexOf(activeCard);
+
+      if (index > 0) {
+        const previousCard = cards[index - 1];
+        activeCard.classList.remove("activeCard");
+        activeCard.classList.add("siguienteCard");
+        previousCard.classList.remove("anteriorCard");
+        previousCard.classList.add("activeCard");
+      }
+    }
+  }
+
+  function siguienteCard() {
+    console.log("Siguiente");
+    const contenedorCards = document.getElementById("contenedorCards");
+    const cards = contenedorCards.querySelectorAll(".card");
+    const activeCard = contenedorCards.querySelector(".activeCard");
+
+    if (activeCard) {
+      const index = Array.from(cards).indexOf(activeCard);
+
+      if (index < cards.length - 1) {
+        const nextCard = cards[index + 1];
+        activeCard.classList.remove("activeCard");
+        activeCard.classList.add("anteriorCard");
+        nextCard.classList.remove("siguienteCard");
+        nextCard.classList.add("activeCard");
+      }
+    }
+  }
+</script>
 
 <script>
-  const container = $("#myCarousel");
-  const items = container.find(".carousel-item");
-  const totalItems = items.length;
-  let currentItem = 0;
-  
-  function goToItem(index) {
-    console.log("Cambiando item: "+index);
-    if (index < 0) index = totalItems - 1;
-    if (index >= totalItems) index = 0;
-    currentItem = index;
+  function voltearCard() {
+    const contenedorCards = document.getElementById("contenedorCards");
+    const activeCard = contenedorCards.querySelector(".activeCard");
 
-    items.removeClass("active");
-    items.eq(currentItem).addClass("active");
+    if (activeCard) {
+      // Alternar la clase en el elemento .activeCard
+      if (activeCard.classList.contains("bg-primary")) {
+        activeCard.classList.remove("bg-primary");
+        activeCard.classList.add("bg-success");
+      } else if (activeCard.classList.contains("bg-success")) {
+        activeCard.classList.remove("bg-success");
+        activeCard.classList.add("bg-primary");
+      }
+
+      const activeChild = activeCard.querySelector(".active");
+      const inactiveChild = activeCard.querySelector(".d-none");
+
+      if (activeChild && inactiveChild) {
+        activeChild.style.transform = "rotateY(360deg)";
+        activeChild.style.transition = "transform 0.8s";
+        inactiveChild.style.transition = "none";
+        inactiveChild.style.transform = "none";
+
+        setTimeout(() => {
+          activeChild.classList.remove("active");
+          activeChild.classList.add("d-none");
+
+          inactiveChild.classList.remove("d-none");
+          inactiveChild.classList.add("active");
+        }, 500);
+      }
+    }
   }
-
-  function nextItem() {
-    console.log("Presionando siguiente");
-    goToItem(currentItem + 1);
-  }
-
-  function prevItem() {
-    console.log("Presionando previa");
-    goToItem(currentItem - 1);
-  }
-
-  $(document).ready(function () {
-    //Código para voltear la card
-    $(".cardBox").click(function () {
-      $(this).toggleClass("clicked");
-    });
-  });
 </script>
+<script src="{% static 'bootstrap/js/formValidation.js' %}"></script>
 {% endblock custom_scripts %}

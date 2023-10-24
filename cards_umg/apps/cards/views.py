@@ -9,7 +9,8 @@ from .models import Collection, Card
 
 def list_collections(request):
     collections = Collection.objects.all()
-    return render(request, 'colecciones/list-collections.html', {'colecciones': collections})
+    categorias = Categoria.objects.all()
+    return render(request, 'colecciones/list-collections.html', {'colecciones': collections, 'categorias': categorias})
 
 
 def listar_colecciones_por_categoria(request, pk):
@@ -133,6 +134,7 @@ def update_card(request, card_id):
 
 def delete_card(request, card_id):
     card = get_object_or_404(Card, pk=card_id)
+    collection_id = card.coleccion.id
     card.delete()
     messages.success(request, 'Tarjeta eliminada exitosamente.')
-    return redirect('cards:list-cards')
+    return redirect('cards:list-cards-in-collection', collection_id=collection_id)
