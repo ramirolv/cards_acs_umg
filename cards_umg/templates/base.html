@@ -1,0 +1,129 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+
+    <title>{% block title %}{% endblock title %}</title>
+    <meta content="" name="description" />
+    <meta content="" name="keywords" />
+
+    <link
+      rel="stylesheet"
+      href="{% static 'bootstrap/css/bootstrap.min.css' %}"
+    />
+    <link
+      rel="stylesheet"
+      href="{% static 'bootstrap/bootstrap-icons-1.11.1/bootstrap-icons.min.css' %}"
+    />
+
+    {% block links_custom %} {% endblock links_custom %}
+  </head>
+
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <div class="container-fluid">
+        <!-- Logo en lugar de "Estudia/" -->
+        <a class="navbar-brand" href="{% url 'core:home' %}"
+          ><img
+            src="{% static 'img/logo.png' %}"
+            alt="Logo"
+            width="40"
+            height="40"
+        /></a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a
+                class="nav-link active"
+                aria-current="page"
+                href="{% url 'core:home' %}"
+                >Inicio</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'core:categorias' %}"
+                >Categorías</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'cards:list-collections' %}"
+                >Colecciones</a
+              >
+            </li>
+            <!-- Agregando "Nosotros" -->
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'core:nosotros' %}">Nosotros</a>
+            </li>
+          </ul>
+          <form method="GET" action="{% url 'cards:list-filter-collections' %}" class="d-flex" role="search">
+            <input
+              class="form-control me-2"
+              type="search"
+              placeholder="Buscar"
+              aria-label="Search"
+              name="search"
+            />
+            <button class="btn btn-outline-success" type="submit">
+              Buscar
+            </button>
+          </form>
+        </div>
+      </div>
+    </nav>
+
+    <main class="pt-4">{% block contenido %} {% endblock contenido %}</main>
+
+
+    {% if messages %}
+    <div class="position-fixed bottom-0 end-0 p-3">
+      {% for message in messages %}
+      <div
+        class="toast align-items-center text-white bg-{{ message.tags }} border-0"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+      >
+        <div class="d-flex">
+          <div class="toast-body">{{ message }}</div>
+          <button
+            type="button"
+            class="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+          ></button>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <script>
+      {% for message in messages %}
+          var toast{{ forloop.counter }} = new bootstrap.Toast(document.querySelector('.toast'));
+          toast{{ forloop.counter }}.show();
+      {% endfor %}
+    </script>
+    {% endif %}
+
+    <!-- Fin del Pie de página -->
+
+    <!-- Fin del Pie de página -->
+
+    <script src="{% static '/jquery/jquery-3.7.1.min.js' %}"></script>
+    <script src="{% static '/bootstrap/js/popper.min.js' %}"></script>
+    <script src="{% static '/bootstrap/js/bootstrap.min.js' %}"></script>
+    {% block custom_scripts %} {% endblock custom_scripts %}
+  </body>
+</html>

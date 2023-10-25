@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+<!--Carga archivo estáticos-->
+{% load static %}
+
+<!--Título de la página actual-->
+{% block title%}Nosotros{%endblock title %}
+
+<!--Ploque de estilos personalizados -->
+{% block links_custom %}
+<style>
+  /* styles.css */
+
+/* styles.css */
+
+.image-container {
+    position: relative;
+    overflow: hidden; /* Para que el efecto de desenfoque no se propague fuera del contenedor */
+  }
+  
+  .image-container img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    animation: moveUpDown 2s infinite alternate; /* Crea la animación de movimiento */
+  }
+
+  @keyframes moveUpDown {
+    0% {
+      transform: translateY(-10px);
+    }
+    100% {
+      transform: translateY(10px);
+    }
+  }
+</style>
+{% endblock links_custom %}
+
+<!--Bloque del contenido principal-->
+{% block contenido %}
+<div class="container col-xxl-8 px-4 py-5">
+  <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
+    <div class="col-10 col-sm-8 col-lg-6">
+      <div class="image-container">
+        <div class="image-shadow"></div>
+        <img
+          src="{% static 'img/logo3.png' %}"
+          class="d-block mx-lg-auto img-fluid blurred-image"
+          alt="Bootstrap Themes"
+          width="700"
+          height="500"
+          loading="lazy"
+        />
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">
+        Acerca de Nosotros
+      </h1>
+      <p class="lead fs-6">
+        Somos un equipo de estudiantes de Ingeniería en Sistemas en la
+        Universidad Mariano Gálvez, actualmente en nuestro décimo semestre.
+        Nuestro compromiso es desarrollar una plataforma innovadora para el
+        aprendizaje y el reforzamiento de conocimientos.
+      </p>
+      <p class="lead fs-6">
+        Nuestro proyecto se enfoca en la creación de tarjetas interactivas de
+        aprendizaje. Los usuarios pueden diseñar su propia colección de tarjetas
+        con enunciados y respuestas, lo que les permite personalizar su
+        experiencia de estudio en cualquier tema de su elección.
+      </p>
+      <p class="lead fs-6">
+        Nuestra plataforma está diseñada para ser fácil de usar y altamente
+        interactiva, brindando a los usuarios una herramienta efectiva para el
+        aprendizaje autodirigido. Estamos comprometidos a proporcionar una
+        experiencia educativa enriquecedora y eficiente.
+      </p>
+      <h6>Integrantes: </h6>
+      <p>Cory Ramírez, Gabriela Fuentes, Ramiro López</p>
+      <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+        <!-- Puedes agregar aquí enlaces a más información o recursos relacionados con tu proyecto -->
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock contenido %}
