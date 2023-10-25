@@ -1,0 +1,297 @@
+{% extends "base.html" %}
+
+<!--Carga archivo estáticos-->
+{% load static %}
+
+<!--Título de la página actual-->
+{% block title%}Categorias{%endblock title %}
+
+<!--Ploque de estilos personalizados -->
+{% block links_custom %}
+<style>
+  /* Aplica estilos a las tarjetas que no tienen la clase activeCard */
+  .activeCard {
+    animation: slide-left 1.4s;
+    display: block;
+  }
+
+  @keyframes slide-left {
+    0% {
+      transform: translateX(300px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateX(0);
+      opacity: 1;
+      display: block;
+    }
+  }
+
+  .anteriorCard {
+    position: absolute; /* Cambia a absolute en lugar de relative */
+    left: 0;
+    top: 0;
+    opacity: 0;
+    animation: scale-down-center 1.4s linear both;
+    display: block; /* Asegura que el elemento esté visible antes de la animación */
+  }
+  @keyframes scale-down-center {
+    0% {
+      transform: scale(0.8);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(0.3);
+      opacity: 0;
+      display: none; /* Oculta el elemento al final de la animación */
+    }
+  }
+
+  /* Clase para ocultar el elemento con una transición hacia la derecha y display: "none" */
+  .siguienteCard {
+    position: absolute; /* Cambia a absolute en lugar de relative */
+    left: 0;
+    top: 0;
+    opacity: 0;
+    animation: slide-right 1.4s linear both;
+    display: block; /* Asegura que el elemento esté visible antes de la animación */
+    transform: scale(0.7);
+  }
+
+  @keyframes slide-right {
+    0% {
+      transform: translateX(0) scale(0.7);
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(300px) scale(0.7);
+      opacity: 0;
+      display: none; /* Oculta el elemento al final de la animación */
+    }
+  }
+</style>
+{% endblock links_custom %}
+
+<!--Bloque del contenido principal-->
+{% block contenido %}
+<!-- ======= Sección de Bienvenida ======= -->
+<section class="d-flex justify-content-center align-items-center mt-5">
+  <h1>Cards de {{collection.nombre}}</h1>
+</section>
+<!-- Fin de la Sección de Bienvenida -->
+<!-- ======= Sección de Características ======= -->
+<section id="features" class="features">
+  <div class="container-fluid" data-aos="fade-up">
+    <div class="row mt-3 justify-content-center">
+      <div class="col-lg-7 col-sm-12 mb-3">
+        <div
+          id="contenedorCards"
+          class="container bg-dark position-relative rounded rounded-5 mb-3 p-5"
+          style="height: 400px; overflow: hidden"
+        >
+          {% for card in cards %}
+          <div class="card bg-primary p-5 text-white col-10 h-100 w-100 justify-content-center d-flex align-items-center {% if forloop.counter0 == 0 %}activeCard{% else %}siguienteCard{% endif %}" onclick="voltearCard()">
+            <!-- Botón Danger en la esquina superior derecha -->
+            <a href="{% url 'cards:delete-card' card.id %}" class="btn btn-danger position-absolute top-0 end-0 m-2 py-1 px-2"><i class="bi bi-trash"></i></a>
+        
+            <div class="enunciado active">
+                <p>Enunciado: </p>
+                <h3>{{card.enunciado}}</h3>
+            </div>
+            <div class="respuesta d-none">
+                <p>Respuesta: </p>
+                <h3>{{card.respuesta}}</h3>
+            </div>
+        </div>
+        
+          {% endfor %}
+        </div>
+
+        <div class="container d-flex justify-content-between">
+          <a class="btn btn-dark" href="#" onclick="regresarCard()">
+            <i class="bi bi-arrow-left"></i> Anterior
+          </a>
+          <a class="btn btn-dark" href="#" onclick="siguienteCard()">
+            Siguiente <i class="bi bi-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+      <div class="col-lg-4 col-sm-12 text-center">
+        <!-- Button trigger modal -->
+        <button
+          type="button"
+          class="btn btn-outline-success"
+          data-bs-toggle="modal"
+          data-bs-target="#staticBackdrop"
+        >
+          <i class="bi bi-bookmark-plus-fill"></i> Agregar card
+        </button>
+
+        <!-- Modal -->
+        <div
+          class="modal fade"
+          id="staticBackdrop"
+          data-bs-backdrop="static"
+          data-bs-keyboard="false"
+          tabindex="-1"
+          aria-labelledby="staticBackdropLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">
+                  Agrega nueva card a la colección {{collection.nombre}}
+                </h1>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <form
+                  class="form row needs-validation"
+                  method="post"
+                  action="{% url 'cards:create-card' %}"
+                  novalidate
+                  enctype="multipart/form-data"
+                >
+                  {% csrf_token %}
+                  <input
+                    id="coleccion"
+                    name="coleccion_id"
+                    value="{{collection.id}}"
+                    hidden
+                    required
+                  />
+                  <div class="form-group mb-3">
+                    <label for="enunciado">Enunciado</label>
+                    <textarea
+                      class="form-control"
+                      id="enunciado"
+                      name="enunciado"
+                      required
+                    ></textarea>
+                    <span class="invalid-feedback">
+                      Este campo es requerido.
+                    </span>
+                  </div>
+                  <div class="form-group mb-3">
+                    <label for="respuesta">Respuesta</label>
+                    <textarea
+                      class="form-control"
+                      id="respuesta"
+                      name="respuesta"
+                      required
+                    ></textarea>
+                    <span class="invalid-feedback">
+                      Este campo es requerido.
+                    </span>
+                  </div>
+                  <div class="container">
+                    <button type="submit" class="btn btn-primary">
+                      <i class="bi bi-floppy-fill"></i> Guardar
+                    </button>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Cerrar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Fin de la Sección de Características -->
+{% endblock contenido %}
+
+<!-- Bloque de los scripts custom -->
+{% block custom_scripts %}
+<script>
+  function regresarCard() {
+    console.log("Regresando");
+    const contenedorCards = document.getElementById("contenedorCards");
+    const cards = contenedorCards.querySelectorAll(".card");
+    const activeCard = contenedorCards.querySelector(".activeCard");
+
+    if (activeCard) {
+      const index = Array.from(cards).indexOf(activeCard);
+
+      if (index > 0) {
+        const previousCard = cards[index - 1];
+        activeCard.classList.remove("activeCard");
+        activeCard.classList.add("siguienteCard");
+        previousCard.classList.remove("anteriorCard");
+        previousCard.classList.add("activeCard");
+      }
+    }
+  }
+
+  function siguienteCard() {
+    console.log("Siguiente");
+    const contenedorCards = document.getElementById("contenedorCards");
+    const cards = contenedorCards.querySelectorAll(".card");
+    const activeCard = contenedorCards.querySelector(".activeCard");
+
+    if (activeCard) {
+      const index = Array.from(cards).indexOf(activeCard);
+
+      if (index < cards.length - 1) {
+        const nextCard = cards[index + 1];
+        activeCard.classList.remove("activeCard");
+        activeCard.classList.add("anteriorCard");
+        nextCard.classList.remove("siguienteCard");
+        nextCard.classList.add("activeCard");
+      }
+    }
+  }
+</script>
+
+<script>
+  function voltearCard() {
+    const contenedorCards = document.getElementById("contenedorCards");
+    const activeCard = contenedorCards.querySelector(".activeCard");
+
+    if (activeCard) {
+      // Alternar la clase en el elemento .activeCard
+      if (activeCard.classList.contains("bg-primary")) {
+        activeCard.classList.remove("bg-primary");
+        activeCard.classList.add("bg-success");
+      } else if (activeCard.classList.contains("bg-success")) {
+        activeCard.classList.remove("bg-success");
+        activeCard.classList.add("bg-primary");
+      }
+
+      const activeChild = activeCard.querySelector(".active");
+      const inactiveChild = activeCard.querySelector(".d-none");
+
+      if (activeChild && inactiveChild) {
+        activeChild.style.transform = "rotateY(360deg)";
+        activeChild.style.transition = "transform 0.8s";
+        inactiveChild.style.transition = "none";
+        inactiveChild.style.transform = "none";
+
+        setTimeout(() => {
+          activeChild.classList.remove("active");
+          activeChild.classList.add("d-none");
+
+          inactiveChild.classList.remove("d-none");
+          inactiveChild.classList.add("active");
+        }, 500);
+      }
+    }
+  }
+</script>
+<script src="{% static 'bootstrap/js/formValidation.js' %}"></script>
+{% endblock custom_scripts %}
