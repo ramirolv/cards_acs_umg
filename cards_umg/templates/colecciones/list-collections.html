@@ -14,16 +14,18 @@
 <!-- ======= Sección de Bienvenida ======= -->
 <section class="d-flex justify-content-center align-items-center mt-5">
   {% if categoria %}
-    <h1> <img src="{{categoria.icono.url}}" alt="" width="35px"> Colecciones de {{categoria.nombre}}</h1>
-    {% else %}
-    <h1>Descubre nuestras colecciones</h1>
-    {% endif %}
+  <h1>
+    <img src="{{categoria.icono.url}}" alt="" width="35px" /> Colecciones de
+    {{categoria.nombre}}
+  </h1>
+  {% else %}
+  <h1>Descubre nuestras colecciones</h1>
+  {% endif %}
 </section>
 <!-- Fin de la Sección de Bienvenida -->
 <!-- ======= Sección de Características ======= -->
 <section id="features" class="features">
   <div class="container-fluid" data-aos="fade-up">
-    
     <div class="container-fluid">
       <!-- Button trigger modal -->
       <button
@@ -59,47 +61,77 @@
               ></button>
             </div>
             <div class="modal-body">
-              <form class="form row needs-validation" method="post" action="{% url 'cards:create-collection' %}" novalidate enctype="multipart/form-data">
+              <form
+                class="form row needs-validation"
+                method="post"
+                action="{% url 'cards:create-collection' %}"
+                novalidate
+                enctype="multipart/form-data"
+              >
                 {% csrf_token %}
                 <div class="form-group mb-3">
-                    <label for="nombre">Nombre de la Colección</label>
-                    <input type="text" class="form-control" id="nombre" name="nombre" required>
-                    <span class="invalid-feedback">
-                        Este campo es requerido.
-                    </span>
+                  <label for="nombre">Nombre de la Colección</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="nombre"
+                    name="nombre"
+                    required
+                  />
+                  <span class="invalid-feedback">
+                    Este campo es requerido.
+                  </span>
                 </div>
                 <div class="form-group mb-3">
-                    <label for="descripcion">Descripción</label>
-                    <textarea class="form-control" id="descripcion" name="descripcion" required></textarea>
-                    <span class="invalid-feedback">
-                        Este campo es requerido.
-                    </span>
+                  <label for="descripcion">Descripción</label>
+                  <textarea
+                    class="form-control"
+                    id="descripcion"
+                    name="descripcion"
+                    required
+                  ></textarea>
+                  <span class="invalid-feedback">
+                    Este campo es requerido.
+                  </span>
                 </div>
                 <div class="form-group mb-3">
-                    <label for="categoria">Categoría</label>
-                    <select class="form-select" id="categoria" name="categoria" required>
-                        <option value="" disabled selected>Selecciona una categoría</option>
-                        {% for categoria in categorias %}
-                        <option value="{{ categoria.id }}">{{ categoria.nombre }}</option>
-                        {% endfor %}
-                    </select>
-                    <span class="invalid-feedback">
-                        Debes seleccionar una categoría.
-                    </span>
+                  <label for="categoria">Categoría</label>
+                  <select
+                    class="form-select"
+                    id="categoria"
+                    name="categoria"
+                    required
+                  >
+                    <option value="" disabled selected>
+                      Selecciona una categoría
+                    </option>
+                    {% for categoria in categorias %}
+                    <option value="{{ categoria.id }}">
+                      {{ categoria.nombre }}
+                    </option>
+                    {% endfor %}
+                  </select>
+                  <span class="invalid-feedback">
+                    Debes seleccionar una categoría.
+                  </span>
                 </div>
                 <!-- Campo de miniatura -->
                 <div class="form-group mb-3">
-                    <label for="miniatura">Miniatura</label>
-                    <input type="file" class="form-control" id="miniatura" name="miniatura" required>
+                  <label for="miniatura">Miniatura</label>
+                  <input
+                    type="file"
+                    class="form-control"
+                    id="miniatura"
+                    name="miniatura"
+                    required
+                  />
                 </div>
                 <div class="container">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-floppy-fill"></i> Guardar
-                    </button>
+                  <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-floppy-fill"></i> Guardar
+                  </button>
                 </div>
-            </form>
-            
-              
+              </form>
             </div>
             <div class="modal-footer">
               <button
@@ -120,19 +152,35 @@
       data-aos-delay="100"
     >
       {% for collection in colecciones %}
-      <div class="card" style="width: 18rem;">
+      <div class="card" style="width: 18rem">
         <!-- Contenedor de la imagen con una relación de aspecto 16:9 -->
         <div class="ratio ratio-4x3 card-img-top">
-            <img src="{{ collection.miniatura.url }}" class="img-fluid" alt="{{ collection.nombre }}">
+          <img
+            src="{{ collection.miniatura.url }}"
+            class="img-fluid"
+            alt="{{ collection.nombre }}"
+          />
         </div>
         <div class="card-body">
-            <h5 class="card-title">{{ collection.nombre }}</h5>
-            <p class="card-text">{{ collection.descripcion }}</p>
-            <a href="{% url 'cards:list-cards-in-collection' collection.id %}" class="stretched-link"></a>
+          <h5 class="card-title">{{ collection.nombre }}</h5>
+          <p class="card-text small">{{ collection.descripcion }}</p>
         </div>
-    </div>
-    
-      <!-- Tarjeta de categorías con tarjeta estándar de Bootstrap -->
+        <div class="card-footer text-center">
+          <a
+            href="{% url 'cards:list-cards-in-collection' collection.id %}"
+            class="btn btn-info btn-sm"
+          >
+            <i class="bi bi-eye"></i> Ver colección
+          </a>
+          <!-- Botón de eliminar con un ícono -->
+          <a
+            href="{% url 'cards:delete-collection' collection.id %}"
+            class="btn btn-danger btn-sm"
+          >
+            <i class="bi bi-trash"></i> Eliminar
+          </a>
+        </div>
+      </div>
       {% endfor %}
     </div>
   </div>

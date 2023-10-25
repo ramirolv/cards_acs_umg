@@ -2,6 +2,7 @@ import json
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.core import serializers
+from django.db.models import Q
 from django.contrib import messages  # Importa el módulo messages
 from apps.core.models import Categoria
 from .models import Collection, Card
@@ -11,6 +12,13 @@ def list_collections(request):
     collections = Collection.objects.all()
     categorias = Categoria.objects.all()
     return render(request, 'colecciones/list-collections.html', {'colecciones': collections, 'categorias': categorias})
+
+
+def list_filter_collections(request):
+    search_query = request.GET.get('search', '')  # Obtener el parámetro de búsqueda desde la URL
+    collections = Collection.objects.filter(Q(nombre__icontains=search_query) | Q(descripcion__icontains=search_query))
+    categorias = Categoria.objects.all()
+    return render(request, 'colecciones/list-collections.html', {'colecciones': collections, 'categorias': categorias, 'search_query': search_query})
 
 
 def listar_colecciones_por_categoria(request, pk):
@@ -73,7 +81,7 @@ def update_collection(request, pk):
 def delete_collection(request, pk):
     collection = get_object_or_404(Collection, pk=pk)
     collection.delete()
-    return redirect('list-collections')
+    return redirect('cards:list-collections')
 
 
 def create_card(request):
@@ -95,7 +103,7 @@ def create_card(request):
             messages.error(request, f'Error al crear la tarjeta: {str(e)}')
             return redirect('cards:list-cards-in-collection', collection_id=coleccion_id)
     else:
-        return redirect('cards:')
+        return redirect('cards:list-collections')
 
 def list_cards_in_collection(request, collection_id):
     # Obtener la colección correspondiente o mostrar un error si no existe

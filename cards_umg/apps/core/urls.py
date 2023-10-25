@@ -12,6 +12,8 @@ urlpatterns = [
     path('categorias/create/', create_categoria, name='create-categoria'),
     path('categorias/update/<int:pk>/', update_categoria, name='update-categoria'),
     path('categorias/delete/<int:pk>/', delete_categoria, name='delete-categoria'),
+    
+    path('nosotros/', nosotros_view, name='nosotros'),
 ]
 
 if settings.DEBUG:

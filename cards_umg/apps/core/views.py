@@ -58,3 +58,7 @@ def delete_categoria(request, pk):
         messages.error(request, f'Error al eliminar la categoría: {str(e)}')
 
     return redirect('core:categorias')
+
+
+def nosotros_view(request):
+    return render(request, 'nosotros/nosotros.html')
